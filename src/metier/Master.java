@@ -1,5 +1,6 @@
 package metier;
 
-public class Master {
+public class Master
+{
 	
 }
