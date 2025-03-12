@@ -1,4 +1,4 @@
-package src.metier;
+package metier;
 
 public class Master {
 	

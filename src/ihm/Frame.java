@@ -1,4 +1,4 @@
-package src.ihm;
+package ihm;
 
 public class Frame {
 	
