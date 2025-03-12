@@ -21,8 +21,7 @@ public class TraitementImage
 			{
 				images[index] = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 				Graphics2D g = images[index].createGraphics();
-				g.drawImage(image, 0, 0, width, height, width * x, height * y, width * x + width, height * y + height,
-						null);
+				g.drawImage(image, 0, 0, width, height, width * x, height * y, width * x + width, height * y + height,null);
 				g.dispose();
 				index++;
 			}
