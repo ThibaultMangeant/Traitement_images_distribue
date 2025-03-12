@@ -21,12 +21,13 @@ public class Controleur
 	{
 		this.images = new BufferedImage[32];
 		BufferedImage image = selectImage();
-		while (image == null){ image = selectImage(); }
+
+		while (image == null)
+			image = selectImage();
 		
 		this.images = TraitementImage.decouperImage(image);
 
 		frame = new FrameGrille(this);
-
 	}
 
 	private BufferedImage selectImage()
@@ -45,9 +46,10 @@ public class Controleur
 				g.drawImage(originalImage, 0, 0, 800, 800, null);
 				g.dispose();
 				return resizedImage;
-			} 
+			}
 			catch (IOException e) { e.printStackTrace(); }
 		}
+
 		return null;
 	}
 
