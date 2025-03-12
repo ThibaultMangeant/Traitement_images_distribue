@@ -1,5 +1,6 @@
 package ihm;
 
-public class Frame {
+public class Frame
+{
 	
 }
