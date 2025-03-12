@@ -26,7 +26,6 @@ public class Controleur
 		this.images = TraitementImage.decouperImage(image);
 
 		frame = new FrameGrille(this);
-
 	}
 
 	private BufferedImage selectImage()
