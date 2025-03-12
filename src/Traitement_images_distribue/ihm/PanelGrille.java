@@ -1,5 +1,5 @@
 package Traitement_images_distribue.ihm;
-import Traitement_images_distribue.ihm.FrameGrille;
+
 import javax.swing.*;
 
 import java.awt.GridLayout;
