@@ -1,4 +1,5 @@
 package Traitement_images_distribue.ihm;
+
 import Traitement_images_distribue.Controleur;
 import javax.swing.JFrame;
 
