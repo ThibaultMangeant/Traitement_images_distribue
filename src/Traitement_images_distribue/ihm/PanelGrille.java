@@ -1,5 +1,4 @@
 package Traitement_images_distribue.ihm;
-import Traitement_images_distribue.ihm.FrameGrille;
 import javax.swing.*;
 
 import java.awt.GridLayout;
@@ -11,7 +10,7 @@ public class PanelGrille extends JPanel
 {
 	private FrameGrille frame;
 	
-	public PanelGrille( FrameGrille frame)
+	public PanelGrille(FrameGrille frame)
 	{
 		this.frame = frame;
 		this.setLayout(new GridLayout(4, 8));
@@ -19,13 +18,16 @@ public class PanelGrille extends JPanel
 
 		images = frame.getImages();
 
-		for (int i = 0; i < 4; i++)
+		for (int i = 0; i < 8; i++)
 		{
-			for (int j = 0; j < 8; j++)
+			for (int j = 0; j < 4; j++)
 			{
-				new JLabel(new ImageIcon(images[i * 8 + j]));
+				JLabel labelTemp = new JLabel(new ImageIcon(images[i * 4 + j]));
+				labelTemp.setSize(10, 10);
+				this.add(labelTemp);
 			}
-			
 		}
+
+		this.setVisible(true);
 	}
 }

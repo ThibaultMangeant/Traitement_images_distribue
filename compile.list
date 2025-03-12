@@ -1,6 +1,6 @@
-src/Controleur.java
+src/Traitement_images_distribue/Controleur.java
 
-src/metier/Master.java
+src/Traitement_images_distribue/metier/Master.java
 
-src/ihm/Frame.java
-src/ihm/Panel.java
+src/Traitement_images_distribue/ihm/FrameGrille.java
+src/Traitement_images_distribue/ihm/PanelGrille.java

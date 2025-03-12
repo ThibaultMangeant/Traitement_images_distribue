@@ -10,17 +10,17 @@ public class TraitementImage
 
 	}
 
-	public BufferedImage[] decouperImage(BufferedImage image)
+	public static BufferedImage[] decouperImage(BufferedImage image)
 	{
 		BufferedImage[] images = new BufferedImage[32];
 
-		int width  = image.getWidth () / 4;
-		int height = image.getHeight() / 8;
+		int width  = image.getWidth () / 8;
+		int height = image.getHeight() / 4;
 		int index  = 0;
 
-		for (int y = 0; y < 8; y++)
+		for (int y = 0; y < 4; y++)
 		{
-			for (int x = 0; x < 4; x++)
+			for (int x = 0; x < 8; x++)
 			{
 				images[index] = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 				Graphics2D g  = images[index].createGraphics();
