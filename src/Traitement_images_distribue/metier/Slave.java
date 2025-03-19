@@ -2,29 +2,38 @@ package Traitement_images_distribue.metier;
 
 import java.awt.image.BufferedImage;
 
-public class Slave
+public class Slave implements Runnable
 {
 	private TraitementImage traitementImage;
+	private BufferedImage   image;
+	private String          traitement;
+	private BufferedImage   result;
 
-	public Slave (BufferedImage image)
+	public Slave(TraitementImage traitementImage)
 	{
-
+		this.traitementImage = traitementImage;
 	}
 
-	public BufferedImage traiterImage (BufferedImage image, String traitement)
+	public synchronized BufferedImage traiterImage(BufferedImage image, String traitement) throws InterruptedException
 	{
-		return traitementImage.traiterImage(image, traitement);
+		this.image      = image;
+		this.traitement = traitement;
+		this.result     = null;
+
+		Thread thread = new Thread(this);
+		thread.start();
+
+		wait(); // Attend que le traitement soit terminé (attend le notify)
+
+		return result;
 	}
 
-	public static void main(String[] args)
+	@Override
+	public synchronized void run()
 	{
-		try
-		{
+		BufferedImage processedImage = traitementImage.traiterImage(image, traitement);
 
-		}
-		catch (Exception e)
-		{
-			System.out.println(e);
-		}
+		this.result = processedImage;
+		notify(); // Notifie que le traitement est terminé
 	}
 }
