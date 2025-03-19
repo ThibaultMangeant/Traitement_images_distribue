@@ -33,17 +33,17 @@ public class Master
 		{
 			this.server = new ServerSocket(4444);
 
-			System.out.println("En attente de connexion");
 
+			System.out.println("En attente de connexion");
 			this.connexion = this.server.accept();
 
 			System.out.println("Nouvelle connexion");
-
 			Slave slave = new Slave(this.connexion);
 
 			System.out.println("Nouvel esclave connecté");
-
 			slavesDispo.add(slave);
+
+			this.traiterImage();
 
 
 			new Thread( () -> runAccept() ).start();
