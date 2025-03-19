@@ -62,4 +62,10 @@ public class FrameGrille extends JFrame
 		this.ctrl.chooseImage(rows, cols);
 		
 	}
+
+	public void changerImage(BufferedImage image)
+	{
+		this.panel.updatePanel();
+		this.panel.afficherImage(image);
+	}
 }

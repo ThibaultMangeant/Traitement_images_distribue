@@ -23,6 +23,9 @@ public class Controleur
 	public Controleur()
 	{
 		frame = new FrameGrille(this);
+
+		System.out.println("Initialisation du master");
+		
 		metier = new Master(this);
 	}
 

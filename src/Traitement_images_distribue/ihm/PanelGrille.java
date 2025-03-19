@@ -38,6 +38,15 @@ public class PanelGrille extends JPanel
 			}
 		}
 	}
+
+	public void afficherImage(BufferedImage image)
+	{
+		JLabel labelTemp = new JLabel(new ImageIcon(image));
+		labelTemp.setSize(10, 10);
+		this.add(labelTemp);
+		this.repaint();
+		this.revalidate();
+	}
 	
 	public void updatePanel()
 	{
