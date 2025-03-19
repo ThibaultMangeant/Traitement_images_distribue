@@ -5,12 +5,18 @@ import Traitement_images_distribue.Controleur;
 
 import java.util.List;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.ArrayList;
 
 public class Master extends Thread
 {
 	private Controleur ctrl;
 	private List<Slave> slavesDispo;
+
+	private ServerSocket server;
+	private Socket connexion;
 
 	private BufferedImage[] images;
 	private BufferedImage imageTraite;
@@ -33,9 +39,16 @@ public class Master extends Thread
 		slavesDispo.add(slave);
 	}
 
-	public void removeSlave(Slave slave)
-	{
-		slavesDispo.remove(slave);
+			while (true)
+			{
+				this.connexion = this.server.accept();
+				new Thread(new Slave()).start();
+			}
+		}
+		catch(IOException e)
+		{
+			System.out.println(e.getMessage());
+		}
 	}
 
 	public void traiterImage()
