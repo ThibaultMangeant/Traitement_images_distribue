@@ -9,7 +9,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Master extends Thread
+public class Master
 {
 	private Controleur ctrl;
 	private List<Slave> slavesDispo;
@@ -33,6 +33,31 @@ public class Master extends Thread
 		{
 			this.server = new ServerSocket(4444);
 
+			System.out.println("En attente de connexion");
+
+			this.connexion = this.server.accept();
+
+			System.out.println("Nouvelle connexion");
+
+			Slave slave = new Slave(this.connexion);
+
+			System.out.println("Nouvel esclave connecté");
+
+			slavesDispo.add(slave);
+
+
+			new Thread( () -> runAccept() ).start();
+		}
+		catch(IOException e)
+		{
+			System.out.println( e.getMessage());
+		}
+	}
+
+	public void runAccept()
+	{
+		try
+		{
 			while (true)
 			{
 				System.out.println("En attente de connexion");
@@ -48,9 +73,9 @@ public class Master extends Thread
 				slavesDispo.add(slave);
 			}
 		}
-		catch(IOException e)
+		catch (IOException e)
 		{
-			System.out.println( e.getMessage());
+			System.out.println(e.getMessage());
 		}
 	}
 
@@ -103,14 +128,5 @@ public class Master extends Thread
 	public BufferedImage getImageTraite()
 	{
 		return this.imageTraite;
-	}
-
-	public void run()
-	{
-		while (true)
-		{
-			this.traiterImage();
-			this.ctrl.changerImage();
-		}
 	}
 }
