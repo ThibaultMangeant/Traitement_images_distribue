@@ -9,9 +9,9 @@ public class Slave implements Runnable
 	private String          traitement;
 	private BufferedImage   result;
 
-	public Slave(TraitementImage traitementImage)
+	public Slave()
 	{
-		this.traitementImage = traitementImage;
+		this.traitementImage = new TraitementImage();
 	}
 
 	public synchronized BufferedImage traiterImage(BufferedImage image, String traitement) throws InterruptedException
