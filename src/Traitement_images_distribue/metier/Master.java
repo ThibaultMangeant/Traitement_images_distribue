@@ -29,15 +29,10 @@ public class Master extends Thread
 		this.slavesDispo = new ArrayList<Slave>();
 		this.images = this.ctrl.getImages();
 
-		// Ajout des slaves
-
-		
-	}
-
-	public void addSlave(Slave slave)
-	{
-		slavesDispo.add(slave);
-	}
+		// Ajout des slaves au master
+		try
+		{
+			this.server = new ServerSocket(4444);
 
 			while (true)
 			{
