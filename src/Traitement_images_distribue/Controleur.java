@@ -19,14 +19,6 @@ public class Controleur
 
 	public Controleur()
 	{
-		this.images = new BufferedImage[32];
-		BufferedImage image = selectImage();
-
-		while (image == null)
-			image = selectImage();
-		
-		this.images = TraitementImage.decouperImage(image);
-
 		frame = new FrameGrille(this);
 	}
 
@@ -53,6 +45,16 @@ public class Controleur
 		return null;
 	}
 
+	public void chooseImage(int rows, int cols)
+	{
+		this.images = new BufferedImage[rows * cols];
+		BufferedImage image = selectImage();
+
+		while (image == null)
+			System.exit(0);
+
+		this.images = TraitementImage.decouperImage(image, rows, cols);
+	}
 	public BufferedImage[] getImages()
 	{
 		return this.images;
