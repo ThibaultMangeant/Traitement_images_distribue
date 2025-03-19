@@ -11,19 +11,20 @@ public class PanelGrille extends JPanel
 {
 	private FrameGrille frame;
 	
-	public PanelGrille(FrameGrille frame)
+	public PanelGrille(FrameGrille frame, int rows, int cols)
 	{
 		this.frame = frame;
-		this.setLayout(new GridLayout(4, 8));
-		BufferedImage[] images = new BufferedImage[32];
+
+		this.setLayout(new GridLayout(rows, cols));
+		BufferedImage[] images = new BufferedImage[rows * cols];
 
 		images = frame.getImages();
 
-		for (int i = 0; i < 8; i++)
+		for (int i = 0; i < rows; i++)
 		{
-			for (int j = 0; j < 4; j++)
+			for (int j = 0; j < cols; j++)
 			{
-				JLabel labelTemp = new JLabel(new ImageIcon(images[i * 4 + j]));
+				JLabel labelTemp = new JLabel(new ImageIcon(images[i * cols + j]));
 				labelTemp.setSize(10, 10);
 				this.add(labelTemp);
 			}
@@ -31,4 +32,6 @@ public class PanelGrille extends JPanel
 
 		this.setVisible(true);
 	}
+
+	
 }
