@@ -10,16 +10,20 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import Traitement_images_distribue.ihm.FrameGrille;
 import Traitement_images_distribue.metier.TraitementImage;
+import Traitement_images_distribue.metier.Master;
 
 public class Controleur
 {
-	BufferedImage[] images;
+	private BufferedImage[] images;
 
-	FrameGrille frame;
+	private FrameGrille frame;
+
+	private Master metier;
 
 	public Controleur()
 	{
 		frame = new FrameGrille(this);
+		metier = new Master(this);
 	}
 
 	private BufferedImage selectImage()
@@ -58,6 +62,11 @@ public class Controleur
 	public BufferedImage[] getImages()
 	{
 		return this.images;
+	}
+
+	public void changerImage()
+	{
+		this.frame.changerImage(this.metier.getImageTraite());
 	}
 
 	public static void main(String[] args)
