@@ -1,17 +1,27 @@
 package Traitement_images_distribue.metier;
 
+import Traitement_images_distribue.Controleur;
+
+
 import java.util.List;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-public class Master
+public class Master extends Thread
 {
+	private Controleur ctrl;
 	private List<Slave> slavesDispo;
 
+	private BufferedImage[] images;
+	private BufferedImage imageTraite;
 
-	public Master()
+
+	public Master(Controleur ctrl)
 	{
-		slavesDispo = new ArrayList<Slave>();
+		this.ctrl = ctrl;
+
+		this.slavesDispo = new ArrayList<Slave>();
+		this.images = this.ctrl.getImages();
 
 		// Ajout des slaves
 
@@ -28,33 +38,50 @@ public class Master
 		slavesDispo.remove(slave);
 	}
 
-	public BufferedImage traiterImage(BufferedImage image)
+	public void traiterImage()
 	{
+		String traitement;
+		Slave slave;
+
+
 		if (slavesDispo.size() == 0)
 		{
 			System.out.println("Aucun esclave disponible");
-			return null;
+			this.imageTraite = null;
 		}
 
-		String traitement;
 		if (Math.random() < 0.5)
 			traitement = "Permutation";
 		else
 			traitement = "Inversion";
 
-		Slave slave = slavesDispo.get((int) (Math.random() * slavesDispo.size()));
-		BufferedImage imageTraite = null;
+		slave = slavesDispo.get((int) (Math.random() * slavesDispo.size()));
+		imageTraite = null;
 		try
 		{
-			imageTraite = slave.traiterImage(image, traitement);
+			for (int cptLig = 0 ; cptLig < images.length ; cptLig++)
+			{
+				this.imageTraite = slave.traiterImage(images[cptLig], traitement);
+			}
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
 		}
+	}
 
-		return imageTraite;
+	public BufferedImage getImageTraite()
+	{
+		return this.imageTraite;
 	}
 
 
+	public void run()
+	{
+		while (true)
+		{
+			this.traiterImage();
+			this.ctrl.changerImage();
+		}
+	}
 }
