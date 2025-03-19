@@ -10,7 +10,8 @@ import java.awt.image.BufferedImage;
 public class PanelGrille extends JPanel
 {
 	private FrameGrille frame;
-	
+	private BufferedImage[] images;
+
 	public PanelGrille(FrameGrille frame, int rows, int cols)
 	{
 		this.frame = frame;
@@ -18,6 +19,13 @@ public class PanelGrille extends JPanel
 		this.setLayout(new GridLayout(rows, cols));
 		BufferedImage[] images = new BufferedImage[rows * cols];
 
+		this.afficherImages(rows, cols);
+
+		this.setVisible(true);
+	}
+
+	public void afficherImages(int rows, int cols)
+	{
 		images = frame.getImages();
 
 		for (int i = 0; i < rows; i++)
@@ -29,8 +37,13 @@ public class PanelGrille extends JPanel
 				this.add(labelTemp);
 			}
 		}
-
-		this.setVisible(true);
+	}
+	
+	public void updatePanel()
+	{
+		this.removeAll();
+		this.repaint();
+		this.revalidate();
 	}
 
 	
