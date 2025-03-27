@@ -18,15 +18,13 @@ public class Controleur
 
 	private FrameGrille frame;
 
-	private Master metier;
-
 	public Controleur()
 	{
 		frame = new FrameGrille(this);
 
 		System.out.println("Initialisation du master");
 		
-		metier = new Master(this);
+		new Master(this);
 	}
 
 	private BufferedImage selectImage()
@@ -67,9 +65,9 @@ public class Controleur
 		return this.images;
 	}
 
-	public void changerImage()
+	public void changerImage(BufferedImage[] image )
 	{
-		this.frame.changerImage(this.metier.getImageTraite());
+		this.frame.changerImage(image);
 	}
 
 	public static void main(String[] args)

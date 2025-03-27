@@ -9,6 +9,8 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.imageio.ImageIO;
+
 public class Master
 {
 	private Controleur ctrl;
@@ -18,7 +20,6 @@ public class Master
 	private ServerSocket server;
 
 	private BufferedImage[] images;
-	private BufferedImage imageTraite;
 
 	public Master(Controleur ctrl)
 	{
@@ -83,31 +84,54 @@ public class Master
 	{
 		try
 		{
-			for (BufferedImage image : images)
+			while (true)
 			{
 				if (slavesDispo.isEmpty())
 				{
-					System.out.println("Aucun esclave disponible");
-					this.imageTraite = null;
-					return;
+					System.out.println("Aucun esclave disponible, attente...");
+					Thread.sleep(1000); // Attendre un moment avant de réessayer
+					continue;
 				}
-
+	
+				// Sélection aléatoire d'une image
+				int index = (int) (Math.random() * images.length);
+				BufferedImage image = images[index];
+	
 				Slave slave = slavesDispo.remove(0);
-				Thread slaveThread = new Thread(() -> {
+				Thread slaveThread = new Thread(() ->
+				{
 					try
 					{
 						Socket slaveSocket = slave.getSocket();
 						ObjectOutputStream out = new ObjectOutputStream(slaveSocket.getOutputStream());
 						ObjectInputStream in = new ObjectInputStream(slaveSocket.getInputStream());
-
-						out.writeObject(image);
-
-						BufferedImage processedImage = (BufferedImage) in.readObject();
+	
+						// Convertir BufferedImage en byte[]
+						ByteArrayOutputStream baos = new ByteArrayOutputStream();
+						ImageIO.write(image, "png", baos);
+						baos.flush();
+						byte[] imageBytes = baos.toByteArray();
+						baos.close();
+	
+						// Envoi du tableau d'octets au Slave
+						out.writeObject(imageBytes);
+						out.flush();
+	
+						// Réception de l'image traitée sous forme de tableau d'octets
+						byte[] processedImageBytes = (byte[]) in.readObject();
+	
+						// Conversion du tableau d'octets en BufferedImage
+						ByteArrayInputStream bais = new ByteArrayInputStream(processedImageBytes);
+						BufferedImage processedImage = ImageIO.read(bais);
+						bais.close();
+	
 						synchronized (this)
 						{
-							this.imageTraite = processedImage;
+							images[index] = processedImage;
+							ctrl.changerImage(images);
 						}
-
+	
+						// Remettre le Slave dans la liste des disponibles
 						slavesDispo.add(slave);
 					}
 					catch (Exception e)
@@ -115,18 +139,13 @@ public class Master
 						e.printStackTrace();
 					}
 				});
+	
 				slaveThread.start();
-				slaveThread.join();
+				slaveThread.join(); // Attendre la fin du traitement avant de continuer
 			}
-		}
-		catch (Exception e)
-		{
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	public BufferedImage getImageTraite()
-	{
-		return this.imageTraite;
-	}
 }

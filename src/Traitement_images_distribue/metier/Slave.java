@@ -4,6 +4,8 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.Socket;
 
+import javax.imageio.ImageIO;
+
 public class Slave implements Runnable
 {
 	private Socket socket;
@@ -21,7 +23,6 @@ public class Slave implements Runnable
 	@Override
 	public void run()
 	{
-		
 		try
 		{
 			while (true)
@@ -29,14 +30,26 @@ public class Slave implements Runnable
 				ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
 				ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
 
-				BufferedImage image = (BufferedImage) in.readObject();
-				String traitement = Math.random() < 0.5 ? "Permutation" : "Inversion";
+				byte[] imageBytes = (byte[]) in.readObject(); // Réception du tableau d'octets
+				ByteArrayInputStream bais = new ByteArrayInputStream(imageBytes);
+				BufferedImage image = ImageIO.read(bais); // Conversion en BufferedImage
+				bais.close();
 
-				System.out.println("Traitement de l'image par l'esclave");
+				String traitement = Math.random() < 0.5 ? "Permutation" : "Inversion";
+				System.out.println("Traitement de l'image par l'esclave: " + traitement);
 
 				BufferedImage processedImage = traiterImage(image, traitement);
 
-				out.writeObject(processedImage);
+				ByteArrayOutputStream baos = new ByteArrayOutputStream();
+				ImageIO.write(processedImage, "png", baos);
+				baos.flush();
+				byte[] processedImageBytes = baos.toByteArray();
+				baos.close();
+
+				out.writeObject(processedImageBytes); // Envoi du tableau d'octets
+				out.flush();
+
+				Thread.sleep(1000);
 			}
 		}
 		catch (Exception e)
@@ -108,7 +121,7 @@ public class Slave implements Runnable
 
 		if ( args.length < 2 )
 		{
-			System.out.println("Syntaxe invalide : java Client <adresse> <port>");
+			System.out.println("Syntaxe invalide : java Slave <adresse> <port>");
 		}
 		else
 		{
