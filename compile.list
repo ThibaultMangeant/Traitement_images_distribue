@@ -2,6 +2,7 @@ src/Traitement_images_distribue/Controleur.java
 
 src/Traitement_images_distribue/metier/Master.java
 src/Traitement_images_distribue/metier/Slave.java
+src/Traitement_images_distribue/metier/TraitementImage.java
 
 src/Traitement_images_distribue/ihm/FrameGrille.java
 src/Traitement_images_distribue/ihm/PanelGrille.java
