@@ -61,17 +61,16 @@ public class Master
 		{
 			while (true)
 			{
-				System.out.println("En attente de connexion");
+				System.out.println("En attente de connexion...");
+				Socket slaveSocket = this.server.accept();
+				System.out.println("Nouvelle connexion détectée");
 
-				this.connexion = this.server.accept();
+				synchronized (slavesDispo)
+				{ // Sécurisation pour éviter conflits de threads
+					slavesDispo.add(new Slave(slaveSocket));
+				}
 
-				System.out.println("Nouvelle connexion");
-
-				Slave slave = new Slave(this.connexion);
-
-				System.out.println("Nouvel esclave connecté");
-
-				slavesDispo.add(slave);
+				System.out.println("Esclave ajouté. Nombre d'esclaves actifs : " + slavesDispo.size());
 			}
 		}
 		catch (IOException e)
@@ -97,8 +96,11 @@ public class Master
 				int index = (int) (Math.random() * images.length);
 				BufferedImage image = images[index];
 	
+				// Sélectionner un esclave disponible
 				Slave slave = slavesDispo.remove(0);
-				Thread slaveThread = new Thread(() ->
+	
+				// Exécuter le traitement dans un thread sans bloquer la boucle principale
+				new Thread(() ->
 				{
 					try
 					{
@@ -132,20 +134,23 @@ public class Master
 						}
 	
 						// Remettre le Slave dans la liste des disponibles
-						slavesDispo.add(slave);
+						synchronized (slavesDispo)
+						{
+							slavesDispo.add(slave);
+						}
 					}
 					catch (Exception e)
 					{
 						e.printStackTrace();
 					}
-				});
-	
-				slaveThread.start();
-				slaveThread.join(); // Attendre la fin du traitement avant de continuer
+				}).start(); // Lancer le thread sans join() pour permettre plusieurs connexions
 			}
-		} catch (Exception e) {
+		}
+		catch (Exception e)
+		{
 			e.printStackTrace();
 		}
 	}
+	
 
 }
