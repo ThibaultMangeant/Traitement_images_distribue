@@ -17,13 +17,11 @@ public class Controleur
 
 	private FrameGrille frame;
 
-	private Master metier;
-
 	public Controleur()
 	{
 		
 		frame = new FrameGrille(this);
-		metier = new Master(this);
+		new Master(this);
 
 		System.out.println("Initialisation du master");
 		
