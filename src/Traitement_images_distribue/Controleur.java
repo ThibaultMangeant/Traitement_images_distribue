@@ -9,7 +9,6 @@ import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import Traitement_images_distribue.ihm.FrameGrille;
-import Traitement_images_distribue.metier.TraitementImage;
 import Traitement_images_distribue.metier.Master;
 
 public class Controleur
@@ -18,13 +17,17 @@ public class Controleur
 
 	private FrameGrille frame;
 
+	private Master metier;
+
 	public Controleur()
 	{
+		
 		frame = new FrameGrille(this);
+		metier = new Master(this);
 
 		System.out.println("Initialisation du master");
 		
-		new Master(this);
+		
 	}
 
 	private BufferedImage selectImage()
@@ -60,8 +63,9 @@ public class Controleur
 		while (image == null)
 			System.exit(0);
 
-		this.images = TraitementImage.decouperImage(image, rows, cols);
+		this.images = metier.decouperImage(image, rows, cols);
 	}
+
 	public BufferedImage[] getImages()
 	{
 		return this.images;
