@@ -38,10 +38,12 @@ public class Controleur
 			try
 			{ 
 				BufferedImage originalImage = ImageIO.read(selectedFile);
-				BufferedImage resizedImage = new BufferedImage(800, 800, BufferedImage.TYPE_INT_ARGB);
+				BufferedImage resizedImage  = new BufferedImage(800, 800, BufferedImage.TYPE_INT_ARGB);
+
 				Graphics2D g = resizedImage.createGraphics();
 				g.drawImage(originalImage, 0, 0, 800, 800, null);
 				g.dispose();
+				
 				return resizedImage;
 			}
 			catch (IOException e) { e.printStackTrace(); }

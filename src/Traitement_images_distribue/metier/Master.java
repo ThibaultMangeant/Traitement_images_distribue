@@ -44,10 +44,12 @@ public class Master
 			System.out.println("Nouvel esclave connecté");
 			slavesDispo.add(slave);
 
+			new Thread(() -> runAccept()).start();
+
 			this.traiterImage();
 
 
-			new Thread( () -> runAccept() ).start();
+			
 		}
 		catch(IOException e)
 		{
@@ -66,7 +68,7 @@ public class Master
 				System.out.println("Nouvelle connexion détectée");
 
 				synchronized (slavesDispo)
-				{ // Sécurisation pour éviter conflits de threads
+				{
 					slavesDispo.add(new Slave(slaveSocket));
 				}
 
@@ -88,41 +90,34 @@ public class Master
 				if (slavesDispo.isEmpty())
 				{
 					System.out.println("Aucun esclave disponible, attente...");
-					Thread.sleep(1000); // Attendre un moment avant de réessayer
+					Thread.sleep(1000);
 					continue;
 				}
 	
-				// Sélection aléatoire d'une image
 				int index = (int) (Math.random() * images.length);
 				BufferedImage image = images[index];
 	
-				// Sélectionner un esclave disponible
 				Slave slave = slavesDispo.remove(0);
 	
-				// Exécuter le traitement dans un thread sans bloquer la boucle principale
 				new Thread(() ->
 				{
 					try
 					{
 						Socket slaveSocket = slave.getSocket();
 						ObjectOutputStream out = new ObjectOutputStream(slaveSocket.getOutputStream());
-						ObjectInputStream in = new ObjectInputStream(slaveSocket.getInputStream());
+						ObjectInputStream in   = new ObjectInputStream(slaveSocket.getInputStream());
 	
-						// Convertir BufferedImage en byte[]
 						ByteArrayOutputStream baos = new ByteArrayOutputStream();
 						ImageIO.write(image, "png", baos);
 						baos.flush();
 						byte[] imageBytes = baos.toByteArray();
 						baos.close();
 	
-						// Envoi du tableau d'octets au Slave
 						out.writeObject(imageBytes);
 						out.flush();
 	
-						// Réception de l'image traitée sous forme de tableau d'octets
 						byte[] processedImageBytes = (byte[]) in.readObject();
 	
-						// Conversion du tableau d'octets en BufferedImage
 						ByteArrayInputStream bais = new ByteArrayInputStream(processedImageBytes);
 						BufferedImage processedImage = ImageIO.read(bais);
 						bais.close();
@@ -133,7 +128,6 @@ public class Master
 							ctrl.changerImage(images);
 						}
 	
-						// Remettre le Slave dans la liste des disponibles
 						synchronized (slavesDispo)
 						{
 							slavesDispo.add(slave);
@@ -143,7 +137,7 @@ public class Master
 					{
 						e.printStackTrace();
 					}
-				}).start(); // Lancer le thread sans join() pour permettre plusieurs connexions
+				}).start();
 			}
 		}
 		catch (Exception e)
