@@ -63,7 +63,7 @@ public class Controleur
 		while (image == null)
 			System.exit(0);
 
-		this.images = metier.decouperImage(image, rows, cols);
+		this.images = Master.decouperImage(image, rows, cols);
 	}
 
 	public BufferedImage[] getImages()
