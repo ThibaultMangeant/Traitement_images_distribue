@@ -1,5 +1,3 @@
-package Traitement_images_distribue.metier;
-
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.Socket;
