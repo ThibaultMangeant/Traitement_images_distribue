@@ -58,13 +58,6 @@ public class PanelGrille extends JPanel
 		}
 		this.revalidate();
 	}
-	
-	public void updatePanel()
-	{
-		this.removeAll();
-		this.repaint();
-		this.revalidate();
-	}
 
 	
 }
