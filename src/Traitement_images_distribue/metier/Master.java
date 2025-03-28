@@ -14,7 +14,7 @@ import javax.imageio.ImageIO;
 public class Master
 {
 	private Controleur ctrl;
-	private List<Slave> slavesDispo;
+	private List<Socket> slavesDispo;
 
 	private Socket connexion;
 	private ServerSocket server;
@@ -25,7 +25,7 @@ public class Master
 	{
 		this.ctrl = ctrl;
 
-		this.slavesDispo = new ArrayList<Slave>();
+		this.slavesDispo = new ArrayList<Socket>();
 		this.images = this.ctrl.getImages();
 		
 		System.out.println("Master initialisé");
@@ -39,10 +39,9 @@ public class Master
 			this.connexion = this.server.accept();
 
 			System.out.println("Nouvelle connexion");
-			Slave slave = new Slave(this.connexion);
 
 			System.out.println("Nouvel esclave connecté");
-			slavesDispo.add(slave);
+			slavesDispo.add(connexion);
 
 			new Thread(() -> runAccept()).start();
 
@@ -69,7 +68,7 @@ public class Master
 
 				synchronized (slavesDispo)
 				{
-					slavesDispo.add(new Slave(slaveSocket));
+					slavesDispo.add(slaveSocket);
 				}
 
 				System.out.println("Esclave ajouté. Nombre d'esclaves actifs : " + slavesDispo.size());
@@ -97,15 +96,15 @@ public class Master
 				int index = (int) (Math.random() * images.length);
 				BufferedImage image = images[index];
 	
-				Slave slave = slavesDispo.remove(0);
+				Socket slave = slavesDispo.remove(0);
 	
 				new Thread(() ->
 				{
 					try
 					{
-						Socket slaveSocket = slave.getSocket();
-						ObjectOutputStream out = new ObjectOutputStream(slaveSocket.getOutputStream());
-						ObjectInputStream in   = new ObjectInputStream(slaveSocket.getInputStream());
+						
+						ObjectOutputStream out = new ObjectOutputStream(slave.getOutputStream());
+						ObjectInputStream in   = new ObjectInputStream(slave.getInputStream());
 	
 						ByteArrayOutputStream baos = new ByteArrayOutputStream();
 						ImageIO.write(image, "png", baos);
